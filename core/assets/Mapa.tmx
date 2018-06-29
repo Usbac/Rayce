@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="50" tileheight="50" nextobjectid="1">
+ <tileset firstgid="1" name="Hotel0" tilewidth="50" tileheight="50" tilecount="1" columns="1">
+  <image source="Paredes/Hotel0.png" width="50" height="50"/>
+ </tileset>
+ <tileset firstgid="2" name="Hotel1" tilewidth="50" tileheight="50" tilecount="1" columns="1">
+  <image source="Paredes/Hotel1.png" width="50" height="50"/>
+ </tileset>
+ <tileset firstgid="3" name="HotelCoke" tilewidth="50" tileheight="50" tilecount="1" columns="1">
+  <image source="Paredes/HotelCoke.png" width="50" height="50"/>
+ </tileset>
+ <tileset firstgid="4" name="Lamp" tilewidth="50" tileheight="50" tilecount="1" columns="1">
+  <image source="Objetos/Lamp.png" width="50" height="50"/>
+ </tileset>
+ <tileset firstgid="5" name="mesa0" tilewidth="50" tileheight="50" tilecount="1" columns="1">
+  <image source="Objetos/mesa0.png" width="50" height="50"/>
+ </tileset>
+ <layer name="Tile Layer 2" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztV+0KwCAI7OP933l/FoxQsdN1xHYgbGVd2ilUSyn1tvb49vzPps1r4xEg6zN4G4mXFe9JvENnEfz3u4f3pDxL/asLe1m9rgtjs6901mi8CMbZGLxfijejXyFg5pnJK9Wd5uOpy7l+pRpH+2sEqJ4zeNH+yuBlxatpw9KgpGGEN4Jd96vlZRWeNVatvs2r+XvfT9bc6ttt2AXzVwDl
+  </data>
+ </layer>
+ <layer name="obj" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFyICVSHUsePSwYlFDjh3U1ktNO1iIVEeJHQNhFjXMpJZ7cKUrQgA93cH4hPTjSq8DAQaTW0YyGI2HUUBpGhhNQwMLhlK5T21Abh06lMBg89Ngc88oIB4AABjnAIw=
+  </data>
+ </layer>
+ <layer name="Obj2" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztwQEBAAAAgiD/r25IQAEAAPBoDhAAAQ==
+  </data>
+ </layer>
+</map>
