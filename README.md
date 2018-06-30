@@ -11,6 +11,7 @@ Motor gráfico basado en el algoritmo de Ray Casting y en la librería de [LibGD
 * Paredes texturizadas
 * Renderización de diferentes sprites
 * Sombreado por distancia
+* Colisión con los objetos y las paredes del mapa
 * Cámara con movimiento hacia adelante, atrás y a los laterales, y rotacion horizontal.
 * Función de ray casting optimizada
 * Algoritmo capaz de procesar un archivo de tiles en formato .tmx automáticamente (capa 1: Paredes, capa 2: Objetos con colision, capa 3: Objetos sin colisión).
