@@ -5,6 +5,8 @@
 <img src="https://k62.kn3.net/213A64F02.png" width="47%" height="47%">
 </p>
 
+[Spanish README](https://github.com/Usbac/Rayce/blob/master/README.es.md)
+
 Ray Casting engine based in the library of [LibGDX](https://github.com/libgdx/libgdx).
 
 ## Features
