@@ -12,7 +12,7 @@ public class Player {
     //*****-----> CONSTRUCTOR <-----*****
     public Player() {
         position = new Vector2f(10, 9);
-        oldPosition = new Vector2f(0, 0);
+        oldPosition = new Vector2f(position.x, position.y);
         angle = 0f;
         speedMovement = 5;
         speedRotation = 1.7f;
@@ -28,15 +28,14 @@ public class Player {
     public void movement(Main e) {
         //Variables
         delta = Gdx.graphics.getDeltaTime();
-        oldPosition.x = position.x;
-        oldPosition.y = position.y;
+        oldPosition.set(position.x, position.y);
 
         //Rotacion
         if (Gdx.input.isKeyPressed(Input.Keys.D)) angle += speedRotation*delta;
         if (Gdx.input.isKeyPressed(Input.Keys.A)) angle -= speedRotation*delta;
         //Ajustar angulo
-        if (angle>6.283f) angle = 0;
-        if (angle<0) angle = 6.283f;
+        if (angle>Main.TWO_PI) angle = 0;
+        if (angle<0) angle = Main.TWO_PI;
         
         //Movimiento Normal
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
@@ -49,12 +48,12 @@ public class Player {
         }
         //Movimiento lateral
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            position.x += Math.sin(angle+1.5707f) * (delta*(speedMovement/2));
-            position.y += Math.cos(angle+1.5707f) * (delta*(speedMovement/2));
+            position.x += Math.sin(angle+Main.HALF_PI) * (delta*(speedMovement/2));
+            position.y += Math.cos(angle+Main.HALF_PI) * (delta*(speedMovement/2));
         }
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            position.x += Math.sin(angle-1.5707f) * (delta*(speedMovement/2));
-            position.y += Math.cos(angle-1.5707f) * (delta*(speedMovement/2));
+            position.x += Math.sin(angle-Main.HALF_PI) * (delta*(speedMovement/2));
+            position.y += Math.cos(angle-Main.HALF_PI) * (delta*(speedMovement/2));
         }
     }
     

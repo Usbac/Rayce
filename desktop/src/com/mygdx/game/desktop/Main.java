@@ -13,26 +13,27 @@ import org.lwjgl.util.vector.Vector2f;
 public class Main implements Screen {
     Player player;
     public final Base Base;
-    
+    //Constantes
+    static final float TWO_PI = (float) (Math.PI*2f);
+    static final float PI = (float) Math.PI;
+    static final float HALF_PI = (float) (Math.PI/2f);
+    static final float THREEHALF_PI = (float) ((3f*Math.PI)/2f);
     //Variables Render & Raycasting
-    Vector2f drawPosition, rayIntensity, oldPosition;
+    Vector2f drawPosition, rayIntensity;
     int width, height, centerX, centerY;
     float delta, FOV; 
     SpriteBatch batch;
     ShapeRenderer shapeRenderer;
     Camera camera;
-    
     //Variables Texturas
     Sprite floor, ceil;
     Color floorColor, ceilColor;
     Texture[] screen;
     float[] distances,
-          texturePosition;
-    
+            texturePosition;
     //MAPA
     TiledMap mapaTemp;
     TiledMapTileLayer[] floors;
-    
     //Otros
     ArrayList<Entity> entity;
     
@@ -56,7 +57,6 @@ public class Main implements Screen {
         //Variables RayCasting        
         drawPosition = new Vector2f();
         rayIntensity = new Vector2f();
-        oldPosition = new Vector2f(0, 0);
         //Arreglos de Impresion
         screen = new Texture[width];
         distances = new float[width];
@@ -75,7 +75,7 @@ public class Main implements Screen {
         ceilColor = new Color(Color.valueOf("7f7f7f"));
         ceil.setColor(ceilColor);
         //MAPA
-        entity = new ArrayList<Entity>();
+        entity = new ArrayList<>();
         floors = new TiledMapTileLayer[3];
         mapaTemp = new TmxMapLoader().load("Mapa.tmx");
         for (int i = 0; i < mapaTemp.getLayers().getCount(); i++) 
@@ -96,7 +96,7 @@ public class Main implements Screen {
                     entity.add(new Entity(floors[2].getCell(x, y).getTile().getTextureRegion(), x, y, false));
             }
     }
-    
+
     
     //**********METODO RAY CASTING**********
     public void RayCasting() {
@@ -105,18 +105,18 @@ public class Main implements Screen {
         ceil.draw(batch);
         
         //IMPRIMIR PAREDES
-        int ladoAnterior = 0;
         float playerAngle = player.angle-0.5f;
         for (int x = 0; x < width; x++) {
             //Inicializar variables Rayo
             float rayAngle = playerAngle + ((float) x / (float) width);
-            if (rayAngle>6.28f) rayAngle -= 6.28f;
-            else if (rayAngle<0f) rayAngle += 6.28f;
+            if (rayAngle>TWO_PI) rayAngle -= TWO_PI;
+            if (rayAngle<0f) rayAngle += TWO_PI;
             
             //Busqueda de Paredes
             float aX, aY, distX, distY;
             boolean horizontal = true;
-            boolean collisionH = false, collisionV = false;
+            boolean collisionH = false, 
+                    collisionV = false;
             float tan = (float) (Math.tan(rayAngle)),
                 cotan = (float) (1f/tan);
             float rayX = player.position.x,
@@ -129,12 +129,12 @@ public class Main implements Screen {
                 //>>HORIZONTAL
                 if (!collisionH) {
                     distY = (float) Math.abs(rayY - Math.floor(rayY));
-                    if (rayAngle<1.5707f || rayAngle>4.712f) distY = 1f-distY;
+                    if (rayAngle<HALF_PI || rayAngle>THREEHALF_PI) distY = 1f-distY;
                     if (distY<0.001f) distY = 1f;
                     aX = (float) (distY * (tan));
                     aY = distY;
 
-                    if (rayAngle<1.5707f || rayAngle>4.712f) {
+                    if (rayAngle<HALF_PI || rayAngle>THREEHALF_PI) {
                         rayY += aY;
                         rayX += aX;
                         if (floors[0].getCell((int) Math.floor(rayX), (int) Math.floor(rayY))!=null) collisionH = true;
@@ -150,12 +150,12 @@ public class Main implements Screen {
                 //>>VERTICAL
                 if (!collisionV) {
                     distX = (float) Math.abs(rayX2 - Math.floor(rayX2));
-                    if (rayAngle<3.14159f) distX = 1f - distX;
+                    if (rayAngle<PI) distX = 1f - distX;
                     if (distX<0.001f) distX = 1f;
                     aY = (float) (distX * (cotan));
                     aX = distX;
 
-                    if (rayAngle<3.14159f) {
+                    if (rayAngle<PI) {
                         rayY2 += aY;
                         rayX2 += aX;
                         if (floors[0].getCell((int) Math.floor(rayX2), (int) Math.floor(rayY2))!=null) collisionV = true;
@@ -172,21 +172,14 @@ public class Main implements Screen {
             //Establecer Distancia mas cercana entre Interseccion Horizontal y Vertical
             float distance = (distV<distH)? distV:distH;
             if (distV<distH) {
+                horizontal = false;
                 rayX = rayX2;
                 rayY = rayY2;
-                horizontal = false;
             }
             
             //Arreglar efecto FishEye & Establecer lado Pared
-            distance = (float) (distance*Math.cos(player.angle-rayAngle));
+            distance = (float) (distance * Math.cos(player.angle-rayAngle));
             int wallSide = (rayX-Math.floor(rayX)<0.01f)? 1:0;
-            
-            //Verificar si se continua en la Orientacion y Tile anterior
-            if (((int)rayX!=oldPosition.x && (int)rayY!=oldPosition.y) || ladoAnterior!=wallSide) {
-                oldPosition.x = (int) rayX;
-                oldPosition.y = (int) rayY;
-                ladoAnterior = wallSide;
-            }
 
             //Variables de Impresion
             float textureX = (float) (rayX-Math.floor(rayX)), 
@@ -200,8 +193,8 @@ public class Main implements Screen {
             distances[x] = (float) distance;
             
             //Ajuste por Posicion en Eje negativo
-            if (horizontal && (rayAngle>1.5707f && rayAngle<4.712f)) rayY --;
-            if (!horizontal && rayAngle>3.1416f) rayX --;
+            if (horizontal && (rayAngle>HALF_PI && rayAngle<THREEHALF_PI)) rayY --;
+            if (!horizontal && rayAngle>PI) rayX --;
 
             if (floors[0].getCell((int)rayX, (int)rayY)!=null)
                 screen[x] = floors[0].getCell((int)rayX, (int)rayY).getTile().getTextureRegion().getTexture();
@@ -213,21 +206,21 @@ public class Main implements Screen {
     //**********METODO DISTANCIA/IMPRESION DE RAYOS Y ENTIDADES**********
     public void generalRender() {
         //Ordenar Entidades de Mas Lejos a Mas Cerca
-        Collections.sort(entity, comparing(Entity::getDistance));
-        Collections.reverse(entity);
+        Collections.sort(entity, comparing(Entity::getDistance).reversed());
         //Ciclo Impresion
         for (int x = 0; x < width; x++) {
             //Buscar mas distante
             int moreDistant = 0;
             for (int i = 0; i < width; i++) 
-                if (distances[i]>=distances[moreDistant]) 
+                if (distances[i]>=distances[moreDistant])
                     moreDistant = i;
             //Imprimir Entidades antes de Imprimir pared mas cercana
             for (Entity aux: entity) 
-                if (aux.distance>distances[moreDistant] || x==(width-1)) aux.Render(this);
+                if (aux.distance>distances[moreDistant] || x==(width-1)) 
+                    aux.Render(this);
             //Imprimir Rayo
             rayRender(moreDistant);
-            distances[moreDistant] = -1;
+            distances[moreDistant] = 0;
         }
     }
     
@@ -256,13 +249,13 @@ public class Main implements Screen {
     public void render(float f) {
         delta = f;
         gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        for (Entity aux: entity) 
-            aux.update(this);
+        for (Entity aux: entity) aux.update(this);
         
         batch.begin();
         RayCasting();
         player.update(this);
         batch.end();
+        
     }
     
     @Override
