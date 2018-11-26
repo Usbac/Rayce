@@ -1,108 +1,127 @@
 package com.mygdx.game.desktop;
+
 import com.badlogic.gdx.graphics.g2d.*;
 import org.lwjgl.util.vector.Vector2f;
 
 public class Entity {
-    //Variables Impresion
-    Vector2f rayIntensity;
-    boolean isDrawn;
-    //Variables generales
+    static Vector2f rayIntensity;
     Vector2f position;
     float distance, size;
     Sprite texture;
-    boolean inVision, visible, collisionable;
+    boolean inVision, visible, isDrawn;
+    boolean collisionable;
     
-    //Getter Distancia
     public float getDistance() {
         return distance;
     }
 
-    //*****-->CONSTRUCTOR VACIO (ITEMS & ENEMIGOS)<--*****
     public Entity() {
         visible = true;
     }
     
-    //*****-->CONSTRUCTOR OBJETOS EN MAPA<--*****
+
     public Entity(TextureRegion text, int x, int y, boolean c) {
         position = new Vector2f(x, y);
         rayIntensity = new Vector2f();
-        visible = true;
         texture = new Sprite(text);
+        visible = true;
         size = 1.8f;
         collisionable = c;
     }
     
-        
-    //*****-->COLISION<--*****
-    public void collision(Main e) {
-        float distX = Math.abs(e.player.position.x-position.x);
-        float distY = Math.abs(e.player.position.y-position.y);
+
+    /**
+     * Executes the collision of the entity with the player
+     * @return <code>true</code> if the entity collides with the player, <code>false</code> otherwise
+     */
+    public boolean collision() {
+        if (!collisionable) 
+            return false;
+        float distX = Math.abs(Player.position.x-position.x);
+        float distY = Math.abs(Player.position.y-position.y);
         if (distX<0.3f && distY<0.3f) {
-            e.player.position.x = e.player.oldPosition.x;
-            e.player.position.y = e.player.oldPosition.y;
+            Player.position.x = Player.oldPosition.x;
+            Player.position.y = Player.oldPosition.y;
         }
-    }
-    
-        
-    //*****-->ACTUALIZACION GENERAL<--*****
-    public void update(Main e) {
-        //Variables
-        inVision = false;
-        isDrawn = false;
-        distance = 0f;
-        float x1 = e.player.position.x-position.x;
-        float y1 = e.player.position.y-position.y;
-        float dist = (float) (Math.sqrt((x1*x1) + (y1*y1)));
-        
-        //Comienzo Impresion: Ancho de pantalla - ancho Entidad
-        int starting = (int) ((size/dist)*-e.width);
-        double angle = Math.atan2(position.x-e.player.position.x, position.y-e.player.position.y);
-        float comparisonAngle = (float) Math.cos(angle);
-        float playerAngle = e.player.angle-0.5f;
-        //Ciclo para verificar que esta en rango de vision
-        for (int x = starting; x < e.width-starting; x+=2) {
-            float rayAngle = playerAngle + ((float)x / (float)e.width);
-            if (Math.abs(Math.cos(rayAngle)-comparisonAngle)<0.01f) 
-                if (inVision(e, rayAngle, x)) break;
-        }
-        if (collisionable) collision(e);
+        return (distX<0.3f && distY<0.3f);
     }
     
     
-    //*****-->ACTUALIZACION VARIABLES IMPRESION<--*****
-    public boolean inVision(Main e, float RayoAngulo, int x) {
+    /**
+     * Returns <code>true</code> if the entity is visible by the player, <code>false</code> otherwise
+     * @param distance The distance between the entity and the player
+     * @return <code>true</code> if the entity is visible by the player, <code>false</code> otherwise
+     */
+    public boolean inVision(float distance) {
+        float comparisonAngle = (float) Math.cos(Math.atan2(position.x - Player.position.x, 
+                                                            position.y - Player.position.y));
+        int start = (int) (size/distance) * -Main.width;
+        for (int x = start; x < Main.width-start; x += 2) {
+            float rayAngle = (Player.angle - 0.5f) + ((float) x / Main.width);
+            if (Math.abs(Math.cos(rayAngle)-comparisonAngle) < 0.01f && touchedByRay(rayAngle, x)) 
+                return true;
+        }
+        return false;
+    }
+    
+    
+    /**
+     * Returns <code>true</code> if the indicated ray touches the entity, <code>false</code> otherwise
+     * @param rayAngle The angle of the ray
+     * @param x the horizontal position in the screen
+     * @return <code>true</code> if the indicated ray touches the entity, <code>false</code> otherwise
+     */
+    public boolean touchedByRay(float rayAngle, int x) {
         float offset = 0.02f;
-        rayIntensity.x = (float) Math.sin(RayoAngulo) * offset;
-        rayIntensity.y = (float) Math.cos(RayoAngulo) * offset;
-        //Recorrer en busca de Entidad
-        float rayoX = e.player.position.x;
-        float rayoY = e.player.position.y;
+        rayIntensity.x = (float) Math.sin(rayAngle) * offset;
+        rayIntensity.y = (float) Math.cos(rayAngle) * offset;
+        //Search entity
+        float rayX = Player.position.x;
+        float rayY = Player.position.y;
         float temporalDistance = 0f;
-        while (true) {
+        while (temporalDistance < 40f) {
             temporalDistance += offset;
-            rayoX += rayIntensity.x;
-            rayoY += rayIntensity.y;
-            if (Math.abs(rayoX-position.x)<offset && Math.abs(rayoY-position.y)<offset) inVision = true;
-            if (temporalDistance>40f || inVision) break;
+            rayX += rayIntensity.x;
+            rayY += rayIntensity.y;
+            if (Math.abs(rayX-position.x) < offset && Math.abs(rayY-position.y) < offset) {
+                inVision = true;
+                break;
+            }
         }
         
-        //Actualizar variables Impresion
+        //Update variables
         if (inVision) {
             distance = temporalDistance;
             texture.setSize(-texture.getY()*size, -texture.getY()*size);
-            texture.setPosition((x-e.centerX)-(texture.getWidth()/2), -(e.height/distance));
-            return true;
-        } else 
-            return false;
+            texture.setPosition((x-Main.centerX)-(texture.getWidth()/2), -(Main.height/distance));
+        }
+        
+        return inVision;
     }
     
+    
+    /**
+     * Render the entity in the SpriteBatch
+     */
+    public void Render() {
+        if (!visible || !inVision || isDrawn)
+            return;
+        texture.draw(Main.batch);
+        isDrawn = true;
+    }
+    
+    
+    /**
+     * Update the entity in General
+     */
+    public void update() {
+        inVision = isDrawn = false;
+        distance = 0f;
+        float x1 = Player.position.x - position.x;
+        float y1 = Player.position.y - position.y;
         
-    //*****-->RENDERIZAR<--*****
-    public void Render(Main e) {
-        if (visible && inVision && !isDrawn) {
-            texture.draw(e.batch);
-            isDrawn = true;
-        }
+        inVision((float) (Math.sqrt((x1*x1) + (y1*y1))));
+        collision();
     }
     
 }
