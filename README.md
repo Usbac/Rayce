@@ -2,8 +2,7 @@
 
 <p align="center">
 <img src="https://k62.kn3.net/25094E777.gif" width="55%" height="55%"> 
-</br>
-<h1 align="center">Rayce</h1>
+<br>
 <img src="https://k62.kn3.net/D990CBE47.png" width="26%" height="26%"> 
 <img src="https://k62.kn3.net/213A64F02.png" width="26%" height="26%">
 </p>
