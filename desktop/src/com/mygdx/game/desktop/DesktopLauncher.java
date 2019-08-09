@@ -10,6 +10,8 @@ public class DesktopLauncher {
         config.title="RAYCE - Raycasting Engine";
         config.width = 1280;
         config.height = 720;
+        config.vSyncEnabled = false;
+        config.foregroundFPS = 0;
         config.fullscreen = false;
         config.resizable = false;
     }

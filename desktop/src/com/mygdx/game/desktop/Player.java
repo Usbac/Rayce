@@ -13,7 +13,7 @@ public final class Player {
     public Player() {
         position = new Vector2f(10, 9);
         oldPosition = new Vector2f(position.x, position.y);
-        angle = 0f;
+        angle = 5.75f;
         speedMovement = 5;
         speedRotation = 1.7f;
         lateralSpeedMovement = speedMovement / 2f;
@@ -21,7 +21,7 @@ public final class Player {
     
     //Singleton
     public static Player getInstance() {
-        return instance = (instance==null)? new Player():instance;
+        return instance = (instance==null) ? new Player() : instance;
     }
     
     
@@ -40,10 +40,13 @@ public final class Player {
      * Adjusts the angle of the player if it goes outside of the circle
      */
     public void adjustAngle() {
-        if (angle > Main.TWO_PI) 
+        if (angle > Main.TWO_PI) {
             angle = 0;
-        if (angle < 0) 
+        }
+        
+        if (angle < 0) {
             angle = Main.TWO_PI;
+        }
     }
     
     
@@ -84,6 +87,7 @@ public final class Player {
     public void collision(Main e) {
         int actualX = (int) Math.floor(position.x),
             actualY = (int) Math.floor(position.y);
+        
         if (e.floors[0].getCell((int)actualX, (int)actualY)!=null) {
             position.x = oldPosition.x;
             position.y = oldPosition.y;

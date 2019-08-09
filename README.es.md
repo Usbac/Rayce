@@ -18,5 +18,5 @@ Motor gráfico basado en el algoritmo de Ray Casting y en la librería de [LibGD
 
 ## Compilar y Ejecutar
 1. Instalar el plugin de Gradle según la plataforma (Netbeans, eclipse, entre otros).
-1. Dirigirse a la carpeta con el código fuente (desktop\src\com\mygdx\game\desktop).
-1. Abrir el archivo DesktopLauncher.java y ejecutar.
+1. Dirigirse a la carpeta con el código fuente.
+1. Ejecutar.
