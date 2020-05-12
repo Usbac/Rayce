@@ -46,8 +46,8 @@ public class Entity {
             return false;
         }
         
-        float distX = Math.abs(Player.position.x-position.x);
-        float distY = Math.abs(Player.position.y-position.y);
+        float distX = Math.abs(Player.position.x - position.x);
+        float distY = Math.abs(Player.position.y - position.y);
         if (distX < 0.3f && distY < 0.3f) {
             Player.position.x = Player.old_position.x;
             Player.position.y = Player.old_position.y;
@@ -95,7 +95,7 @@ public class Entity {
             tmp_distance += offset;
             ray_x += rayIntensity.x;
             ray_y += rayIntensity.y;
-            if (Math.abs(ray_x-position.x) < offset && Math.abs(ray_y-position.y) < offset) {
+            if (Math.abs(ray_x - position.x) < offset && Math.abs(ray_y - position.y) < offset) {
                 in_vision = true;
                 break;
             }
@@ -104,7 +104,7 @@ public class Entity {
         //Update variables
         if (in_vision) {
             distance = tmp_distance;
-            texture.setSize(-texture.getY()*size, -texture.getY()*size);
+            texture.setSize(-texture.getY() * size, -texture.getY() * size);
             texture.setPosition((x - Renderer.centerX) - (texture.getWidth() / 2), -(Renderer.height / distance));
         }
         

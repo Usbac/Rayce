@@ -7,8 +7,6 @@
 <img src="https://k62.kn3.net/213A64F02.png" width="26%" height="26%">
 </p>
 
-[Spanish README](https://github.com/Usbac/Rayce/blob/master/README.es.md)
-
 Ray Casting engine based in the library of [LibGDX](https://github.com/libgdx/libgdx).
 
 ## Features
@@ -25,7 +23,7 @@ Ray Casting engine based in the library of [LibGDX](https://github.com/libgdx/li
 
   In the RayCasting method the rays are fired from the player's position and when it collides with a wall, their characteristics are stored in the 3 arrays previously mentioned.
 
-  Then the entities are sorted from farthest to nearest (for drawing them in the correct order), after that the rays are drawn in the same way from farthest to nearest, when any of the entities are closer than the previous ray, It is drawn on the screen.
+  Then the entities are sorted from farthest to nearest (for drawing them in the correct order), after that, the rays are drawn in the same way from farthest to nearest, if any of the entities are closer than the previous ray, it simply gets drawn on the screen.
 
 ## Compile and run
 1. Install the Gradle plugin in your IDE.
